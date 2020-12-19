@@ -1,0 +1,57 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> userManager
+@{
+    var searchResult = ViewData["SearchResult"] as IList<User>;
+   
+    var currentUser = await userManager.GetUserAsync(User);
+    var userId = currentUser?.Id;
+}
+
+<div class="add-friend">
+    <div class="search-container">
+        <input type="text" class="search-input" name="name" value="" />
+        <button type="button" class="search-button">Search</button>
+    </div>
+    <div class="search-result-list">
+        @foreach (var user in searchResult)
+        {
+            <div class="search-result-item">
+                <div class="card">
+                    <div class="card-body search-result-item-body">
+                        <h5 class="card-title">@user.Email</h5>
+                        <button id="add-friend-button" data-username="@user.Email" class="btn btn-success">+</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $('.search-button').on('click', () => {
+        console.log($('.search-input').val())
+        location.replace('/Friends/AddFriend?userName=' + $('.search-input').val())
+    });
+
+    $('#add-friend-button').on('click', () => {
+        let username = $('#add-friend-button').data('username')
+        $.post({
+            url: '/Friends/AddFriend',
+            type: 'POST',
+            contentType: 'application/json',
+            //dataType: 'json',
+            data: JSON.stringify({
+                userName: username,
+                currentUserId: "@userId"
+            }),
+            success: data => {
+                alert('Successfuly added a friend!')
+            },
+            error: err => {
+                alert('Error! ' + err.message)
+            }
+        })
+    })
+</script>

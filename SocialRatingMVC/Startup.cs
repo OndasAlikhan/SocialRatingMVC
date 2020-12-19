@@ -13,6 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SocialRatingMVC.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace SocialRatingMVC
 {
@@ -28,16 +30,17 @@ namespace SocialRatingMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<SocialDbContext>(options =>
                 options.UseSqlite("Data Source=sr.db"));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddRazorPages()
-                .AddRazorRuntimeCompilation();
+            services.AddRazorPages();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddDefaultUI()
+                .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider)
+                .AddEntityFrameworkStores<SocialDbContext>();
             services.AddControllersWithViews();
-
+            //services.AddTransient<IEmailSender, IAppEmailSender>();
             services.Configure<IdentityOptions>(options =>
             {
                 // Default Password settings.

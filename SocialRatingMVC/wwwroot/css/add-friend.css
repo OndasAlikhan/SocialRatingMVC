@@ -1,0 +1,14 @@
+﻿.search-container {
+    /*display: flex;
+    justify-content: space-between;*/
+    width: 100%;
+}
+
+.search-input {
+    margin-right: 20px;
+    width: 600px;
+}
+
+.search-result-item-body {
+    display: flex;
+}

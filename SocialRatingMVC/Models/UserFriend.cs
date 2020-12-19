@@ -9,12 +9,12 @@ namespace SocialRatingMVC.Models
     public class UserFriend
     {
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public int FriendId { get; set; }
+        public string UserId { get; set; }
+        public string FriendId { get; set; }
         public int FriendshipStatusId { get; set; }
 
-        public IdentityUser User { get; set; }
-        public IdentityUser Friend { get; set; }
+        public User User { get; set; }
+        public User Friend { get; set; }
         public FriendshipStatus FriendshipStatus { get; set; }
         
     }

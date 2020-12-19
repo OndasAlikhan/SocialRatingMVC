@@ -1,26 +1,86 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<User> userManager
 @{
+    var friendList = ViewData["FriendList"] as IList<User>;
+
+    var currentUser = await userManager.GetUserAsync(User);
+    var userId = currentUser?.Id;
 }
 
 <div class="friend-list">
-    <div class="friend-list__item-container">
-        <div class="friend-list__avatar-container">
-            <img src="#" alt="" class="friend-list__avatar" />
-        </div>
-        <div class="friend-list__info-block">
-            <div class="friend-list__name">Bon Jovi</div>
-            <div class="friend-list__action"><a href="#">Send reaction</a></div>
-        </div>
+    <div class="friend-list__list-container">
+
+        @foreach (var friend in friendList)
+        {
+            <div class="friend-list__item-container">
+                <div class="friend-list__avatar-container">
+                    <img src="/img/random-avatar2.jpg" alt="" class="friend-list__avatar" />
+                </div>
+
+                <div class="friend-list__info-block">
+                    <div class="friend-list__name">@friend.UserName</div>
+                    <div class="friend-list__action"><button id="open-modal-button" data-username="@friend.UserName" class="btn btn-primary" data-toggle="modal" data-target="#reaction-modal">Send reaction</button></div>
+                </div>
+            </div>
+        }
     </div>
-    <div class="friend-list__item-container">
-        <div class="friend-list__avatar-container">
-            <img src="#" alt="" class="friend-list__avatar" />
-        </div>
-        <div class="friend-list__info-block">
-            <div class="friend-list__name">Bon Jovi</div>
-            <div class="friend-list__action"><a href="#">Send reaction</a></div>
+    <div class="friend-list__add-button-container">
+        <a class="friend-list__add-button btn btn-secondary"
+           asp-controller="Friends"
+           asp-action="AddFriend">
+            Add new friend
+        </a>
+    </div>
+
+</div>
+<div id="reaction-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Type your reaction:</label>
+                    <input id="reaction-text" class="form-control" type="text" name="name" value="" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="send-reaction-action" class="btn btn-primary">Send reaction</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    let friendUsername;
+    $('#open-modal-button').on('click', () => {
+        friendUsername = $('#open-modal-button').data('username')
+    })
+    $('#send-reaction-action').on('click', () => {
+        let reactionText = $('#reaction-text').val()
+        $.post({
+            url: '/Friends/SendReaction',
+            method: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify({
+                currentUserId: "@userId",
+                friendUsername: friendUsername,
+                reactionText
+            }),
+            success: () => {
+                alert('Successfuly send reaction')
+            },
+            error: err => {
+                alert('Error! ' + err)
+            }
+        })
+    })
+</script>

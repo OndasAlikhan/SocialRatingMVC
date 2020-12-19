@@ -7,8 +7,7 @@ namespace SocialRatingMVC.Models
 {
     public class FriendshipStatus
     {
-        private readonly static int STATUS_REQUESTED = 0;
-        private readonly static int STATUS_ADDED = 1;
+        public readonly static string NAME_ADDED = "Added";
 
         public int Id { get; set; }
         public string Name { get; set; }

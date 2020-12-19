@@ -1,5 +1,10 @@
 ﻿.friend-list {
     display: flex;
+    justify-content: space-between;
+}
+
+.friend-list__list-container {
+    display: flex;
     flex-direction: column;
     max-width: 600px;
 }
@@ -22,5 +27,19 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
+
+}
+
+.friend-list__info-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.friend-list__add-button-container {
+
+}
+
+.friend-list__add-button {
 
 }
